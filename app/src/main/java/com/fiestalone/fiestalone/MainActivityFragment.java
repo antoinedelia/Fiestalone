@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.telecom.Call;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,8 @@ import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import java.io.IOException;
+
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -35,6 +38,11 @@ public class MainActivityFragment extends Fragment {
             AccessToken accessToken = loginResult.getAccessToken();
             Profile profile = Profile.getCurrentProfile();
             displayWelcomeMessage(profile);
+
+            Intent intent = new Intent(getActivity(), MapsActivity.class);
+            intent.putExtra("profile", profile);
+            startActivity(intent);
+
 
         }
 
@@ -55,6 +63,8 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Directly go to map if user already connected
+
         FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
         tokenTracker = new AccessTokenTracker() {
@@ -72,6 +82,22 @@ public class MainActivityFragment extends Fragment {
         };
         tokenTracker.startTracking();
         profileTracker.startTracking();
+        try {
+            if (Profile.getCurrentProfile() != null) {
+                Log.e("YOUR_APP_LOG_TAG", "IF");
+                Intent intent = new Intent(getActivity(), MapsActivity.class);
+                intent.putExtra("profile", Profile.getCurrentProfile());
+                startActivity(intent);
+            }
+            else
+            {
+                Log.e("YOUR_APP_LOG_TAG", "ELSE");
+            }
+        }catch (Exception e)
+        {
+            Log.e("YOUR_APP_LOG_TAG", "I got an error", e);
+        }
+
         // Initialize the SDK before executing any other operations,
         // especially, if you're using Facebook UI elements.
     }
