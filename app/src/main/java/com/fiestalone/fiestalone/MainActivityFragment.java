@@ -42,6 +42,7 @@ public class MainActivityFragment extends Fragment {
             Intent intent = new Intent(getActivity(), MapsActivity.class);
             intent.putExtra("profile", profile);
             startActivity(intent);
+            getActivity().finish();
 
 
         }
@@ -88,6 +89,7 @@ public class MainActivityFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), MapsActivity.class);
                 intent.putExtra("profile", Profile.getCurrentProfile());
                 startActivity(intent);
+                getActivity().finish();
             }
             else
             {
